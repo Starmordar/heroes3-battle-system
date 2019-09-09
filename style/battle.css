@@ -1,0 +1,62 @@
+body {
+    background-image: url('../assets/locations/bg.jpg');
+    background-position-y: 100%;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.small {
+    font-size: 93px;
+    color: red;
+    fill: red;
+}
+
+.float-container {
+    padding-top: 4%;
+    padding-left: 15%;
+}
+
+.origin polygon {
+    fill: rgba(0, 0, 0, 0.5);
+}
+
+.samerow polygon {
+    fill: hsl(120, 20%, 90%);
+}
+
+.shadow polygon {
+    fill: hsl(60, 10%, 90%);
+}
+
+.highlight polygon {
+    fill: hsl(60, 100%, 85%);
+}
+
+.wall polygon {
+    fill: hsl(0, 20%, 70%);
+}
+
+/* text {
+    display: none;
+} */
+
+#image {
+    position: absolute;
+    height: 109px;
+    width: 100px;
+    background: url('https://www.spriters-resource.com/resources/sheets/42/44977.png') 0px -192px;
+    top: 15%;
+    left: 17%;
+    transition: top 4s linear, left 4s linear;
+}
+
+#image.top {
+    top: 35%;
+    left: 40%;
+}
+
+g {
+    z-index: 999;
+}
