@@ -15,10 +15,37 @@ let coordinates = hexes.map((element) => {
 
 globalPotion = [0, 1];
 
+let gameUnitsStack = [{
+    pos1: 9,
+    pos2: 0,
+    container: null,
+    img: document.querySelector('.img-1')
+}, {
+    pos1: 7,
+    pos2: 0,
+    container: null,
+    img: document.querySelector('.img-2')
+}, {
+    pos1: 5,
+    pos2: 0,
+    container: null,
+    img: document.querySelector('.img-3')
+}, {
+    pos1: 3,
+    pos2: 0,
+    container: null,
+    img: document.querySelector('.img-4')
+}, {
+    pos1: 1,
+    pos2: 0,
+    container: null,
+    img: document.querySelector('.img-5')
+}];
+
 let global = [];
 
 function findOrigin(hexes, coordinates) {
-    const currentPolygon = document.querySelector('.wall');
+    const currentPolygon = document.querySelector('.active');
 
     let parameters = currentPolygon.getBoundingClientRect()
 
@@ -41,6 +68,32 @@ function findOrigin(hexes, coordinates) {
     }
 }
 
+function initImagePosition(element) {
+    let parameters = element.container.getBoundingClientRect()
+
+    let centerX = parameters.top + parameters.width / 2;
+    let centerY = parameters.left + parameters.height / 2;
+
+    element.img.style.left = centerY - 50 + 'px';
+    element.img.style.top = centerX - 100 + 'px';
+
+    setTimeout(() => {
+        element.img.style.transition = 'top 1s linear, left 1s linear';
+    }, 10)
+}
+
+gameUnitsStack.forEach(element => {
+    let container = findByPosition(element.pos1, element.pos2, hexes);
+    element['container'] = container;
+
+    container.classList.add('unit-position');
+
+    initImagePosition(element);
+});
+
+gameUnitsStack[gameUnitsStack.length - 1].container.classList.add('wall');
+gameUnitsStack[gameUnitsStack.length - 1].img.classList.add('active');
+findOrigin(hexes, coordinates);
 
 hexes.forEach(element => {
     element.addEventListener("mouseenter", function (e) {
@@ -49,23 +102,19 @@ hexes.forEach(element => {
 
     element.addEventListener("mouseleave", function (e) {
         e.target.firstElementChild.classList.remove('active-hex');
-
-        // let neight = document.querySelectorAll('.origin');
-        // neight.forEach(element => {
-        //     element.classList.remove('origin')
-        // });
     });
 
     element.addEventListener("click", function (e) {
         const hex = e.target.parentElement;
-        if (hex.classList.contains('origin')) {
+
+        if (hex.classList.contains('origin') && !hex.classList.contains('unit-wait')) {
             let parameters = element.getBoundingClientRect()
 
             let centerX = parameters.top + parameters.width / 2;
             let centerY = parameters.left + parameters.height / 2;
 
-            document.getElementById("image").style.left = centerY - 50 + 'px';
-            document.getElementById("image").style.top = centerX - 100 + 'px';
+            document.querySelector('.active').style.left = centerY - 50 + 'px';
+            document.querySelector('.active').style.top = centerX - 100 + 'px';
 
             animateScript();
 
@@ -82,7 +131,6 @@ hexes.forEach(element => {
         }
     })
 });
-
 
 function findByPosition(pos1, pos2, hexes) {
     let gridCoordinates = hexes.map((element) => {
@@ -101,63 +149,36 @@ function findByPosition(pos1, pos2, hexes) {
     }
 }
 
+let images1 = document.querySelectorAll('#image');
+images1.forEach(element => {
+    element.addEventListener('transitionend', (e) => {
+        if (e.propertyName == 'top') {
+            e.target.classList.remove('active');
 
-findByPosition(3, 0, hexes);
+            let first = gameUnitsStack.pop()
 
-let gameUnitsStack = [{
-    pos1: 9,
-    pos2: 0,
-    container: null
-}, {
-    pos1: 7,
-    pos2: 0,
-    container: null
-}, {
-    pos1: 5,
-    pos2: 0,
-    container: null
-}, {
-    pos1: 3,
-    pos2: 0,
-    container: null
-}, {
-    pos1: 1,
-    pos2: 0,
-    container: null
-}];
+            first.container.classList.remove('unit-position');
+            first.container.classList.remove('wall');
 
-gameUnitsStack.forEach(element => {
-    let container = findByPosition(element.pos1, element.pos2, hexes);
-    element['container'] = container;
+            first = updatePosition(global[1], global[0], global[2], first)
 
-    container.classList.add('unit-position')
+            gameUnitsStack.unshift(first);
+
+            let neight = document.querySelectorAll('.origin');
+            neight.forEach(element => {
+                element.classList.remove('origin')
+            });
+
+            gameUnitsStack[gameUnitsStack.length - 1].img.classList.add('active');
+            gameUnitsStack[gameUnitsStack.length - 1].img.classList.add('wall');
+            gameUnitsStack[gameUnitsStack.length - 1].img.classList.add('unit-point');
+
+            findOrigin(hexes, coordinates);
+
+        }
+
+    }, false)
 });
-
-gameUnitsStack[gameUnitsStack.length - 1].container.classList.add('wall')
-findOrigin(hexes, coordinates);
-
-
-
-document.getElementById("image").addEventListener('transitionend', (e) => {
-    if (e.propertyName == 'top') {
-        let first = gameUnitsStack[gameUnitsStack.length - 1]
-
-        first.container.classList.remove('unit-position');
-        first.container.classList.remove('wall');
-
-        first = updatePosition(global[1], global[0], global[2], first)
-
-        // gameUnitsStack.unshift(first);
-
-        let neight = document.querySelectorAll('.origin');
-        neight.forEach(element => {
-            element.classList.remove('origin')
-        });
-
-        findOrigin(hexes, coordinates);
-    }
-
-}, false);
 
 function updatePosition(newPos1, newPos2, newContainer, unit) {
     unit.pos1 = newPos1;
@@ -165,8 +186,5 @@ function updatePosition(newPos1, newPos2, newContainer, unit) {
 
     unit.container = newContainer
 
-    unit.container.classList.add('wall');
-    unit.container.classList.add('unit-position');
-    console.log(unit);
     return unit
 }

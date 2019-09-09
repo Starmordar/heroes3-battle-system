@@ -57,10 +57,7 @@ text {
     background: url('https://www.spriters-resource.com/resources/sheets/42/44977.png') 0px -192px;
     top: 15%;
     left: 17%;
-    transition: top 1s linear, left 1s linear;
 }
-
-
 
 g {
     z-index: 999;
