@@ -38,24 +38,29 @@ body {
     fill: hsl(0, 20%, 70%);
 }
 
-/* text {
-    display: none;
-} */
+.unit-position polygon {
+    fill: rgba(0, 0, 0, 0) !important
+}
 
-#image {
+.origin.active-hex polygon {
+    fill: rgba(0, 0, 0, 0.7) !important
+}
+
+text {
+    display: none;
+}
+
+.test-animation-image {
     position: absolute;
     height: 109px;
     width: 100px;
     background: url('https://www.spriters-resource.com/resources/sheets/42/44977.png') 0px -192px;
     top: 15%;
     left: 17%;
-    transition: top 4s linear, left 4s linear;
+    transition: top 1s linear, left 1s linear;
 }
 
-#image.top {
-    top: 35%;
-    left: 40%;
-}
+
 
 g {
     z-index: 999;

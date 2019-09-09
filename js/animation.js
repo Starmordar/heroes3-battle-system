@@ -14,16 +14,12 @@ function animateScript() {
     }, interval);
 }
 
+document.getElementById("image").addEventListener('transitionend', animate, false);
 
-// setTimeout(() => {
-//     clearInterval(tID);
-//     document.getElementById("image").style.backgroundPosition =
-//         `0px -192px`;
-// }, 6000)
 
-document.getElementById("image").addEventListener('transitionend', () => {
+function animate(e) {
     clearInterval(tID);
     document.getElementById("image").style.backgroundPosition =
         `0px -192px`;
-});
+}
 
